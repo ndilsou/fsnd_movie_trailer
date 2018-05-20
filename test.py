@@ -37,7 +37,11 @@ class TheMovieDBFinderTestCase(unittest.TestCase):
     def test_retrieve_movie_details_from_id(self):
         movie_id = 284054
         details = self.finder.get_media_details(movie_id)
-        self.assertEqual(MOVIE_DETAILS, details)
+        # Some fields are subject to change (ex popularity). So we assert a few static fields instead
+        # of the whole object.
+        self.assertEqual(MOVIE_DETAILS["id"], details["id"])
+        self.assertEqual(MOVIE_DETAILS["genres"], details["genres"])
+        self.assertEqual(MOVIE_DETAILS["production_companies"], details["production_companies"])
 
     def test_extract_title_from_details(self):
         movie = self.finder.create_media_from_details(MOVIE_DETAILS)
@@ -69,3 +73,7 @@ class TheMovieDBFinderTestCase(unittest.TestCase):
         query = {"query": "Black Panther", "year": 2018}
         movie = self.finder.find(query)
         self.assertIsInstance(movie, media.Movie)
+
+
+if __name__ == '__main__':
+    unittest.main()
