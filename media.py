@@ -8,8 +8,11 @@ class Movie:
     Represents a Movie.
     """
 
-    def __init__(self, title, description, poster_image_url, trailer_youtube_url):
+    def __init__(self, title, plotline, poster_image_url, trailer_youtube_url):
         self.title = title
-        self.description = description
+        self.plotline = plotline
         self.trailer_youtube_url = trailer_youtube_url
         self.poster_image_url = poster_image_url
+
+    def __repr__(self):
+        return f"Movie({self.title}, {self.plotline[:30] + '...'}, {self.poster_image_url}, {self.trailer_youtube_url})"

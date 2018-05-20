@@ -75,15 +75,25 @@ main_page_head = '''
               'frameborder': 0
             }));
         });
+        
+        // Display the plotline in a modal when the i button is clicked.
+        $(document).on('click', '.info-button', function (event) {
+            var plotline_text = $(this).attr('data-content');
+            console.log(plotline_text);
+            $("#plotline-text-container").empty().append(plotline_text);
+        });
+        
         // Animate in the movies when the page loads
         $(document).ready(function () {
           $('.movie-tile').hide().first().show("fast", function showNext() {
             $(this).next("div").show("fast", showNext);
           });
         });
+        
+        // loads the popovers.
         $(function () {
-          $('[data-toggle="popover"]').popover()
-        })
+          $('[data-toggle="popover"]').popover();
+        });
     </script>
 </head>
 '''
@@ -104,7 +114,26 @@ main_page_content = '''
         </div>
       </div>
     </div>
-
+    
+    <!-- Plotline Modal -->
+    <div class="modal" id="plotline">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <a href="#" class="hanging-close" data-dismiss="modal" aria-hidden="true">
+            <img src="https://lh5.ggpht.com/v4-628SilF0HtHuHdu5EzxD7WRqOrrTIDi_MhEG6_qkNtUK5Wg7KPkofp_VJoF7RS2LhxwEFCO1ICHZlc-o_=s0#w=24&h=24"/>
+          </a>
+            <div class="modal-header">
+                <h4 class="modal-title">Plotline</h4>
+            </div>
+          <div class="modal-body">
+            <div class="text-center" id="plotline-text-container">
+            </div>
+          </div>
+            <div class="modal-footer"></div>
+        </div>
+      </div>
+    </div>
+    
     <!-- Main Page Content -->
     <div class="container">
       <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
@@ -125,13 +154,13 @@ main_page_content = '''
 
 # A single movie entry html template
 movie_tile_content = '''
-<div class="col-md-6 col-lg-4 movie-tile">
-    <button type="button" class="close" data-toggle="popover" data-placement="left" 
-            title="Storyline" data-content="{description}" aria-label="Close">
+<div class="col-md-6 col-lg-4 movie-tile" data-trailer-youtube-id="{trailer_youtube_id}">
+    <button type="button" class="close info-button" data-toggle="modal" data-target="#plotline"
+    data-content="{description}" aria-label="Close">
         <span class="glyphicon glyphicon-info-sign" aria-hidden="true">
         </span>
     </button>
-    <div class="text-center" data-trailer-youtube-id="{trailer_youtube_id}" data-toggle="modal" data-target="#trailer">
+    <div class="text-center"  data-toggle="modal" data-target="#trailer">
         <img src="{poster_image_url}" width="220" height="342">
         <h2>{movie_title}</h2>
     </div>
@@ -162,7 +191,7 @@ def create_movie_tiles_content(movies):
             movie_title=movie.title,
             poster_image_url=movie.poster_image_url,
             trailer_youtube_id=trailer_youtube_id,
-            description=movie.description
+            description=movie.plotline
         )
     return content
 

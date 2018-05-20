@@ -1,6 +1,28 @@
 {
-  "movies": [
-    "Black Panther",
-    "Interstellar"
+  "movie": [
+    {
+      "query": "Black Panther",
+      "year": "2018"
+    },
+    {
+      "query": "Ready Player One",
+      "year": "2018"
+    },
+    {
+      "query": "Blade Runner",
+      "year": "1982"
+    },
+    {
+      "query": "Blade Runner 2049",
+      "year": "2017"
+    },
+    {
+      "query": "Baby Driver",
+      "year": "2017"
+    },
+    {
+      "query": "John Wick",
+      "year": "2014"
+    }
   ]
 }

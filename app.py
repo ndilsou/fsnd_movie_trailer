@@ -2,7 +2,7 @@ import json
 import model
 from fresh_tomatoes import open_movies_page
 
-DEBUG = True
+DEBUG = False
 
 
 def main(load_media_collection_functor):
@@ -23,7 +23,7 @@ def main(load_media_collection_functor):
 
 if __name__ == '__main__':
     if DEBUG:
-        load_media_functor  = model.load_test_media_collection
+        load_media_functor = model.load_default_media_collection
     else:
         load_media_functor = model.load_media_collection
 
