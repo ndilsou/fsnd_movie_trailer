@@ -7,8 +7,10 @@ DEBUG = False
 
 def main(load_media_collection_functor):
     """
-    Entry point into the application. Fetch the collection of movies to display and displays the page.
-    :arg load_media_collection_functor functor of signature f(media_type, media_names) used to fetch the Movies object.
+    Entry point into the application. Fetch the collection of movies to display
+    and displays the page.
+    :arg load_media_collection_functor functor of signature f(media_type,
+        media_names) used to fetch the Movies object.
     :return: None
     """
     with open("./media.json", "rt") as fh:

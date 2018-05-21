@@ -37,11 +37,14 @@ class TheMovieDBApiFinder:
         Search TheMovieDB for the media, returns the id of the first result.
         throws KeyError if the media could not be found or status code != 200.
         throws ValueError if status code != 200
-        :param search_query: Details of the search query, such as media name, year or any other filter for the search.
+        :param search_query: Details of the search query, such as media name,
+            year or any other filter for the search.
         :return: str, id of the media.
         """
         url = self.SEARCH_URL.format(media_type=self.media_type)
-        payload = dict(api_key=self.API_KEY, include_adult=False, **search_query)
+        payload = dict(api_key=self.API_KEY,
+                       include_adult=False,
+                       **search_query)
         response = requests.get(url, payload)
 
         if response.status_code == 200:
@@ -58,11 +61,13 @@ class TheMovieDBApiFinder:
 
     def get_media_details(self, media_id):
         """
-        Queries TMDB.com for the details of the media, including videos and images.
+        Queries TMDB.com for the details of the media,
+        including videos and images.
         :param media_id:
         :return:
         """
-        url = self.MEDIA_URL_TEMPLATE.format(media_type=self.media_type, media_id=media_id)
+        url = self.MEDIA_URL_TEMPLATE.format(media_type=self.media_type,
+                                             media_id=media_id)
         payload = {
             "api_key": self.API_KEY,
             "append_to_response": "videos,images",
@@ -78,7 +83,8 @@ class TheMovieDBApiFinder:
         Generates a KeyError indicating that the search failed.
         :return:
         """
-        return KeyError(f"No {self.media_type} with details {search_query} was found.\n{results}")
+        return KeyError(f"No {self.media_type} with details {search_query}"
+                        f" was found.\n{results}")
 
 
 class MovieFinder(TheMovieDBApiFinder):
@@ -92,31 +98,39 @@ class MovieFinder(TheMovieDBApiFinder):
 
     def create_media_from_details(self, details):
         """
-        Extracts the relevant details of the Movie from its raw form into a domain object for the application.
+        Extracts the relevant details of the Movie from its raw form into
+         a domain object for the application.
         :return: Movie
         """
         title = details["title"]
         plotline = details["overview"]
-        youtube_trailer_url = self.first_youtube_trailer_url(details["videos"]["results"])
-        poster_image_url = self.highest_voted_image(details["images"]["posters"])
-        return media.Movie(title, plotline, poster_image_url, youtube_trailer_url)
+        youtube_trailer_url = self.first_youtube_trailer_url(
+            details["videos"]["results"])
+        poster_image_url = self.highest_voted_image(
+            details["images"]["posters"])
+        return media.Movie(title, plotline, poster_image_url,
+                           youtube_trailer_url)
 
     @staticmethod
     def first_youtube_trailer_url(videos):
-        youtube_trailers = [video for video in videos if video["site"] == "YouTube" and video["type"] == "Trailer"]
+        youtube_trailers = [video for video in videos
+                            if video["site"] == "YouTube"
+                            and video["type"] == "Trailer"]
         try:
             video = youtube_trailers[0]
         except IndexError:
-            print("No Youtube Trailer available. Using first Youtube Video instead")
-            youtube_videos = [video for video in videos if video["site"] == "YouTube"]
+            print("No Youtube Trailer available. "
+                  "Using first Youtube Video instead")
+            youtube_videos = [video for video in videos
+                              if video["site"] == "YouTube"]
             try:
                 video = youtube_videos[0]
             except IndexError:
                 print("No youtube video available.")
                 video = {"key": "XXXXXXXX"}
 
-        youtube_trailer_url = f"https://www.youtube.com/watch?v={video['key']}"
-        return youtube_trailer_url
+        trailer_url = f"https://www.youtube.com/watch?v={video['key']}"
+        return trailer_url
 
     @staticmethod
     def highest_voted_image(images):
@@ -127,7 +141,8 @@ class MovieFinder(TheMovieDBApiFinder):
                 highest_vote = image["vote_average"]
                 highest_voted_image = image
 
-        poster_image_url = f"https://image.tmdb.org/t/p/original{highest_voted_image['file_path']}"
+        poster_image_url = f"https://image.tmdb.org/t/p/" \
+                           f"original{highest_voted_image['file_path']}"
         return poster_image_url
 
 
@@ -148,7 +163,8 @@ def load_media_collection(media_type, search_queries):
     """
     Loads a list of media of a given type from an external API.
     :param media_type: str, Type of the media to be displayed, ex. movies
-    :param search_queries: list[str], Names of the media to be loaded form the API.
+    :param search_queries: list[str], Names of the media to be loaded form
+    the API.
     :return: list[Media]
     """
 
@@ -169,15 +185,40 @@ def load_media_collection(media_type, search_queries):
 def load_default_media_collection(media_type, media_names):
     """
     Creates a fixed list of movies.
-    :param media_type: str, Type of the media to be displayed, ex. movies, tv_shows, etc..
+    :param media_type: str, Type of the media to be displayed, ex. movies,
+    tv_shows, etc..
     :param media_names: list[str], Names of the media to be loaded.
     :return: list[Movie]
     """
-    toy_story = media.Movie("Toy Story", "A story of a boy and his toys that come to life", "http://upload.wikimedia.org/wikipedia/en/1/13/Toy_Story.jpg", "https://www.youtube.com/watch2v=vwy3H85NOG4")
-    school_of_rock = media.Movie("School of Rock", "Storyline", "http://upload.wikimedia.org/wikipedia/en/1/11/School_of_Rock_Poster.jpg", "https://www.youtube.com/watch2v=3PsUJFEBC74")
-    ratatouille = media.Movie("Ratatouille", "Storyline", "http://upload.wikimedia.org/wikipedia/en/5/50/RatatouillePoster.jpg", "https://www.youtube.com/watch2v=c3sBBRxDAgk")
-    midnight_in_paris = media.Movie("Midnight in Paris", "Storyline", "http://upload.wikimedia.org/wikipedia/en/9/9f/Midnight_in_Paris_Poster.jpg", "https://www.youtube.com/watch2v=atLg2wQ12mvu")
-    hunger_games = media.Movie("Honger Games", "Storyline", "http://upload.wikimedia.org/wikipedia/en/4/42/HungerGamesPoster.jpg", "https://www.youtube.com/watch2v=PbA63a7H0bo")
+    toy_story = media.Movie("Toy Story",
+                            "A story of a boy and his "
+                            "toys that come to life",
+                            "http://upload.wikimedia.org/"
+                            "wikipedia/en/1/13/Toy_Story.jpg",
+                            "https://www.youtube.com/watch2v=vwy3H85NOG4")
+    school_of_rock = media.Movie("School of Rock",
+                                 "Storyline",
+                                 "http://upload.wikimedia.org/wikipedia/"
+                                 "en/1/11/School_of_Rock_Poster.jpg",
+                                 "https://www.youtube.com/"
+                                 "watch2v=3PsUJFEBC74")
+    ratatouille = media.Movie("Ratatouille",
+                              "Storyline",
+                              "http://upload.wikimedia.org/"
+                              "wikipedia/en/5/50/RatatouillePoster.jpg",
+                              "https://www.youtube.com/watch2v=c3sBBRxDAgk")
+    midnight_in_paris = media.Movie("Midnight in Paris",
+                                    "Storyline",
+                                    "http://upload.wikimedia.org/"
+                                    "wikipedia/en/9/9f/"
+                                    "Midnight_in_Paris_Poster.jpg",
+                                    "https://www.youtube.com/"
+                                    "watch2v=atLg2wQ12mvu")
+    hunger_games = media.Movie("Honger Games", "Storyline",
+                               "http://upload.wikimedia.org/"
+                               "wikipedia/en/4/42/HungerGamesPoster.jpg",
+                               "https://www.youtube.com/watch2v=PbA63a7H0bo")
 
-    movies = [toy_story, school_of_rock, ratatouille, midnight_in_paris, hunger_games]
+    movies = [toy_story, school_of_rock,
+              ratatouille, midnight_in_paris, hunger_games]
     return movies

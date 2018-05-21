@@ -1,5 +1,6 @@
 """
-Domain Objects representing the video content that can be displayed in the application.
+Domain Objects representing the video content that can be displayed in the
+application.
 """
 
 
@@ -15,4 +16,5 @@ class Movie:
         self.poster_image_url = poster_image_url
 
     def __repr__(self):
-        return f"Movie({self.title}, {self.plotline[:30] + '...'}, {self.poster_image_url}, {self.trailer_youtube_url})"
+        return f"Movie({self.title}, {self.plotline[:30] + '...'}, " \
+               f"{self.poster_image_url}, {self.trailer_youtube_url})"
