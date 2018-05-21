@@ -112,10 +112,13 @@ class MovieFinder(TheMovieDBApiFinder):
                            youtube_trailer_url)
 
     @staticmethod
+    def _is_youtube_trailer(video):
+        return video["site"] == "YouTube" and video["type"] == "Trailer"
+
+    @staticmethod
     def first_youtube_trailer_url(videos):
         youtube_trailers = [video for video in videos
-                            if video["site"] == "YouTube"
-                            and video["type"] == "Trailer"]
+                            if self._is_youtube_trailer(video)]
         try:
             video = youtube_trailers[0]
         except IndexError:
@@ -142,15 +145,15 @@ class MovieFinder(TheMovieDBApiFinder):
                 highest_voted_image = image
 
         poster_image_url = f"https://image.tmdb.org/t/p/" \
-                           f"original{highest_voted_image['file_path']}"
+                            f"original{highest_voted_image['file_path']}"
         return poster_image_url
 
 
 def get_finder_for_media_type(media_type):
     """
     Returns the appropriate finder class for the given media type
-    :param media_type: 
-    :return: 
+    :param media_type:
+    :return:
     """
     finders = {
         "movie": MovieFinder
